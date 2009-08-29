@@ -24,7 +24,6 @@ class Monk < Thor
   def test
     verify "config/settings.example.yml"
 
-    migrate(test)
     $:.unshift File.join(File.dirname(__FILE__), "test")
 
     Dir['test/**/*_test.rb'].each do |file|
