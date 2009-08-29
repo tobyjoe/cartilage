@@ -4,17 +4,27 @@ class Monk < Thor
   include Thor::Actions
 
   desc "migrate", "Migrate DataMapper"
-  def migrate
-    require "init"
+  def migrate(env = ENV['RACK_ENV'] || "development")
+    ENV['RACK_ENV'] = env
     verify "config/settings.example.yml"
-
+    require "init"
     DataMapper.auto_migrate!
   end
+
+  desc "upgrade", "Upgrade DataMapper"
+  def upgrade(env = ENV['RACK_ENV'] || "development")
+    ENV['RACK_ENV'] = env
+    verify "config/settings.example.yml"
+    require "init"
+    DataMapper.auto_upgrade!
+  end
+
 
   desc "test", "Run all the tests"
   def test
     verify "config/settings.example.yml"
 
+    migrate(test)
     $:.unshift File.join(File.dirname(__FILE__), "test")
 
     Dir['test/**/*_test.rb'].each do |file|
