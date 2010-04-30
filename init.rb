@@ -8,14 +8,15 @@ rescue LoadError
   require "dependencies"
 end
 
-require "monk/glue"
-require "json"
+require 'monk/glue'
+require 'json'
 require 'sinatra'
 require 'erb'
 require 'dm-core'
 require 'dm-validations'
 require 'dm-timestamps'
-
+require 'dm-do-adapter'
+require 'dm-sqlite-adapter'
 
 
 class Main < Monk::Glue
@@ -36,7 +37,7 @@ Dir[root_path("app/**/*.rb")].each do |file|
 end
 
 # Connect to sqlite3.
-sqlite3_path = settings(:sqlite3)[:database]
+sqlite3_path = monk_settings(:sqlite3)[:database]
 DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/#{sqlite3_path}")
 
 
